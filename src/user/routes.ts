@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { json, Router } from 'express';
 import UserService from './user.js';
 
 export default class UserRouter {
@@ -12,8 +12,16 @@ export default class UserRouter {
   }
 
   initializeRoutes() {
-    this.routes.get('/', (req, res) => {
-      res.write('Hello, world!');
+    this.routes.get('/:id', async (req, res) => {
+      const userID = req.params.id;
+      const user = await this.service.store.get(userID);
+      return res.json(user);
+    });
+
+    this.routes.post('/', async (req, res) => {
+      const user = req.body;
+      const result = await this.service.registerUser(user);
+      return res.json(result);
     });
   }
 }

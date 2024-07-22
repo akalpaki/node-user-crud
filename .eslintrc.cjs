@@ -4,4 +4,8 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   root: true,
+  rules: {
+    'no-floating-promises': true,
+    'no-misused-promises': true,
+  },
 };

@@ -22,6 +22,8 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "mariadb": "^3.3.1"
   }

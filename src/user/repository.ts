@@ -1,4 +1,4 @@
-import type { Pool, PoolConnection } from 'mariadb';
+import type { Connection, Pool, PoolConnection } from 'mariadb';
 
 export type User = {
   id: string;
@@ -15,40 +15,41 @@ export class UserRepository {
     this.pool = pool;
   }
 
-  async create(user: User): Promise<User> {
+  async create(user: User): Promise<void> {
     return await new Promise(async (resolve, reject) => {
       const conn = await this.pool.getConnection();
       try {
-        const res = await conn.query(
-          {
-            sql: 'INSERT INTO users (id, username, password, email, role) VALUES (?, ?, ?, ?, ?)',
-          },
-          [user.id, user.username, user.password, user.email, user.role],
-        );
-        resolve(res);
+        await conn.query({ sql: 'INSERT INTO users (id, username, password, email, role) VALUES (?, ?, ?, ?, ?)' }, [
+          user.id,
+          user.username,
+          user.password,
+          user.email,
+          user.role,
+        ]);
+        resolve();
       } catch (err) {
         reject(err);
       } finally {
-        conn.release();
+        await conn.release();
       }
     });
   }
 
-  async get(userID: string): Promise<User> {
+  async get(userID: string): Promise<User | Error> {
     return await new Promise(async (resolve, reject) => {
       const conn = await this.pool.getConnection();
       try {
-        const res = await conn.query(
+        const user: User = await conn.query(
           {
-            sql: 'SELECT * FROM user WHERE id = ?',
+            sql: 'SELECT id, username, email, role FROM users WHERE id = ?',
           },
           [userID],
         );
-        resolve(res);
+        resolve(user);
       } catch (err) {
         reject(err);
       } finally {
-        conn.release;
+        await conn.release();
       }
     });
   }

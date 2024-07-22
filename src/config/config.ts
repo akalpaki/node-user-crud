@@ -8,9 +8,11 @@ export type ServerConfig = {
 };
 
 export type DatabaseConfig = {
-  host: string | undefined;
-  user: string | undefined;
-  password: string | undefined;
+  host: string;
+  port: number;
+  database: string;
+  user: string;
+  password: string;
   connectionLimit: number;
 };
 
@@ -20,9 +22,11 @@ export function LoadConfig(): Config {
       port: process.env.PORT || '8000',
     },
     db: {
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_ROOT_PASSWORD,
+      host: process.env.DB_HOST ? process.env.DB_HOST : 'localhost',
+      port: process.env.DB_PORT ? Number.parseInt(process.env.DB_PORT) : 6969,
+      database: process.env.DB_DATABASE ? process.env.DB_DATABASE : '',
+      user: process.env.DB_USER ? process.env.DB_USER : 'root',
+      password: process.env.DB_ROOT_PASSWORD ? process.env.DB_ROOT_PASSWORD : 'root',
       connectionLimit: process.env.CONNECTION_LIMIT ? Number.parseInt(process.env.CONNECTION_LIMIT) : 5,
     },
   };
