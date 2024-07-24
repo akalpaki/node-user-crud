@@ -1,4 +1,4 @@
-import type { Connection, Pool, PoolConnection } from 'mariadb';
+import type { Pool } from 'mariadb';
 
 export type User = {
   id: string;
@@ -6,6 +6,11 @@ export type User = {
   password: string;
   email: string;
   role: string;
+};
+
+export type LoginInfo = {
+  username: string;
+  password: string;
 };
 
 export class UserRepository {
@@ -44,6 +49,25 @@ export class UserRepository {
             sql: 'SELECT id, username, email, role FROM users WHERE id = ?',
           },
           [userID],
+        );
+        resolve(user);
+      } catch (err) {
+        reject(err);
+      } finally {
+        await conn.release();
+      }
+    });
+  }
+
+  async getByUsername(username: string): Promise<User[]> {
+    return await new Promise(async (resolve, reject) => {
+      const conn = await this.pool.getConnection();
+      try {
+        const user: User[] = await conn.query(
+          {
+            sql: 'SELECT id, username, password, email, role FROM users WHERE username = ?',
+          },
+          username,
         );
         resolve(user);
       } catch (err) {

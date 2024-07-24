@@ -5,6 +5,7 @@ export type Config = {
 
 export type ServerConfig = {
   port: string;
+  jwtSecret: string;
 };
 
 export type DatabaseConfig = {
@@ -20,6 +21,7 @@ export function LoadConfig(): Config {
   return {
     server: {
       port: process.env.PORT || '8000',
+      jwtSecret: process.env.JWT_SECRET || 'superSecret',
     },
     db: {
       host: process.env.DB_HOST ? process.env.DB_HOST : 'localhost',
